@@ -226,6 +226,229 @@ void adminPanel()
 {
     system("cls");
     logo();
+    getOrder();
+    int a_position = 1, keyPressed = 0;
+
+    // 13 is the ASCII value of Enter KEY
+
+    while(keyPressed != 13)
+    {
+        gotoxy(24, 12);
+        menuArrow(1,a_position);
+        printf(" CONFIRM ORDER");
+        gotoxy(24, 14);
+        menuArrow(2,a_position);
+        printf(" CANCEL ORDER");
+        gotoxy(24, 16);
+        keyPressed = getch();
+
+        if(keyPressed == 80 && a_position != 2)
+        {
+            a_position++;
+        }
+        else if(keyPressed == 72 && a_position != 1)
+        {
+            a_position--;
+        }
+        else
+        {
+            a_position = a_position;
+        }
+    }
+    int conf;
+
+    if(a_position==1)
+    {
+        int x = 16;
+        for(int i = 0; i < ords; i++)
+        {
+            gotoxy(24, x);
+            printf("%d . ", i + 1);
+            printf("%d", orders[i].quant);
+            if(orders[i].item == 1)
+            {
+                printf(" Porota ");
+            }
+            else if(orders[i].item == 2)
+            {
+                printf(" Bhaji ");
+            }
+            else if(orders[i].item == 3)
+            {
+                printf(" Singara ");
+            }
+            else if(orders[i].item == 4)
+            {
+                printf(" Lacchi ");
+            }
+            else if(orders[i].item == 5)
+            {
+                printf(" Chapathi ");
+            }
+            else if(orders[i].item == 6)
+            {
+                printf(" Fried Rice ");
+            }
+            else if(orders[i].item == 7)
+            {
+                printf(" Noodle ");
+            }
+            else if(orders[i].item == 8)
+            {
+                printf(" Sandwich ");
+            }
+            else if(orders[i].item == 9)
+            {
+                printf(" Barfi ");
+            }
+            else if(orders[i].item == 10)
+            {
+                printf(" Meats ");
+            }
+            else if(orders[i].item == 11)
+            {
+                printf(" Seasonal Juice ");
+            }
+            else if(orders[i].item == 12)
+            {
+                printf(" Custard ");
+            }
+
+            printf("Taka %d.", orders[i].total);
+            if(orders[i].status == 0)
+            {
+                printf("     PENDING     ");
+            }
+            else
+            {
+                printf("     DELIVERED    ");
+            }
+
+            x+=2;
+        }
+
+        gotoxy(24, 14);
+        printf("ENTER INDEX TO CONFIRM ORDER: ");
+        scanf("%d", &conf);
+
+        orders[conf - 1].status = 1;
+        FILE *fx = fopen("db/orders.txt", "w");
+
+        for(int i = 0; i < ords; i++)
+        {
+            fprintf(fx, "%s\n", orders[i].email);
+            fprintf(fx, "%d\n", orders[i].item);
+            fprintf(fx, "%d\n", orders[i].total);
+            fprintf(fx, "%d\n", orders[i].quant);
+            fprintf(fx, "%d\n", orders[i].status);
+        }
+        fclose(fx);
+        gotoxy(24, 14);
+        printf("                                        ");
+        printf("ORDER CONFIRMED.");
+        sleep(1);
+        adminPanel();
+
+    }
+    else
+    {
+        int x = 16;
+        for(int i = 0; i < ords; i++)
+        {
+            gotoxy(24, x);
+
+            printf("%d . ", i + 1);
+
+            printf("%d", orders[i].quant);
+            if(orders[i].item == 1)
+            {
+                printf(" Porota ");
+            }
+            else if(orders[i].item == 2)
+            {
+                printf(" Bhaji ");
+            }
+            else if(orders[i].item == 3)
+            {
+                printf(" Singara ");
+            }
+            else if(orders[i].item == 4)
+            {
+                printf(" Lacchi ");
+            }
+            else if(orders[i].item == 5)
+            {
+                printf(" Chapathi ");
+            }
+            else if(orders[i].item == 6)
+            {
+                printf(" Fried Rice ");
+            }
+            else if(orders[i].item == 7)
+            {
+                printf(" Noodle ");
+            }
+            else if(orders[i].item == 8)
+            {
+                printf(" Sandwich ");
+            }
+            else if(orders[i].item == 9)
+            {
+                printf(" Barfi ");
+            }
+            else if(orders[i].item == 10)
+            {
+                printf(" Meats ");
+            }
+            else if(orders[i].item == 11)
+            {
+                printf(" Seasonal Juice ");
+            }
+            else if(orders[i].item == 12)
+            {
+                printf(" Custard ");
+            }
+
+            printf("Taka %d.", orders[i].total);
+            if(orders[i].status == 0)
+            {
+                printf("     PENDING     ");
+            }
+            else if(orders[i].status == 1)
+            {
+                printf("     DELIVERED    ");
+            }
+            else{
+                printf("     CANCELLED    ");
+            }
+
+            x+=2;
+        }
+
+        gotoxy(24, 14);
+        printf("ENTER INDEX TO CANCEL ORDER: ");
+        scanf("%d", &conf);
+
+        orders[conf - 1].status = 2;
+        FILE *fx = fopen("db/orders.txt", "w");
+
+        for(int i = 0; i < ords; i++)
+        {
+            fprintf(fx, "%s\n", orders[i].email);
+            fprintf(fx, "%d\n", orders[i].item);
+            fprintf(fx, "%d\n", orders[i].total);
+            fprintf(fx, "%d\n", orders[i].quant);
+            fprintf(fx, "%d\n", orders[i].status);
+        }
+        fclose(fx);
+        gotoxy(24, 14);
+        printf("                                        ");
+        printf("ORDER CANCELLED.");
+        sleep(1);
+        adminPanel();
+
+    }
+
 }
 
 void go_back_user(int j)
@@ -559,11 +782,16 @@ void orderStatus()
 
             printf("     %d    ", orders[i].quant);
             printf("     %d    ", orders[i].total);
-            if(orders[i].status == 0){
+            if(orders[i].status == 0)
+            {
                 printf("     PENDING     ");
             }
+            else if(orders[i].status == 1)
+            {
+                printf("     DELIVERED     ");
+            }
             else{
-                printf("     DELIVERED    ");
+                printf("     CANCELLED     ");
             }
         }
         x+=2;
@@ -595,30 +823,6 @@ void credits()
     printf("    MAINUR RAHAT");
     gotoxy(45,22);
     printf("     C2231xx");
-
-    go_back_user(16);
-}
-
-
-void bus_schedule()
-{
-    system("cls");
-    logo();
-    gotoxy(45,10);
-    printf(" TODAYS BUS SCHEDULE");
-    gotoxy(40,12);
-    printf("     TO VARSITY");
-    gotoxy(40,13);
-    printf("DEPARTURE TIME: 9:00 PM | DRIVER: KARIM MOLLA");
-    gotoxy(40,14);
-    printf("BUS NUMBER: CHA-METRO 7789 | CONTACT: 01710056789");
-
-    gotoxy(40,16);
-    printf("     FROM VARSITY");
-    gotoxy(40,17);
-    printf("DEPARTURE TIME: 16:00 PM | DRIVER: RAHIM SHEIKH");
-    gotoxy(40,18);
-    printf("BUS NUMBER: CHA-METRO 5475 | CONTACT: 01700123456");
 
     go_back_user(16);
 }
